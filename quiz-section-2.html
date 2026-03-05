@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DollyGirls Chatter Training — Section 2 Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #000000;
+    --surface: #0d0d0d;
+    --surface2: #161616;
+    --border: #2a2a2a;
+    --accent: #ff2ecc;
+    --accent-dim: rgba(255,46,204,0.12);
+    --accent-glow: rgba(255,46,204,0.35);
+    --text: #ffffff;
+    --muted: #777777;
+    --success: #ff2ecc;
+    --danger: #ff4466;
+    --success-dim: rgba(255,46,204,0.1);
+    --danger-dim: rgba(255,68,102,0.1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; left: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,46,204,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    animation: drift 12s ease-in-out infinite alternate;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -200px; right: -200px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(255,46,204,0.05) 0%, transparent 70%);
+    pointer-events: none;
+    animation: drift2 15s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift { from { transform: translate(0,0); } to { transform: translate(40px, 30px); } }
+  @keyframes drift2 { from { transform: translate(0,0); } to { transform: translate(-30px, -40px); } }
+
+  .container { width: 100%; max-width: 680px; position: relative; z-index: 1; }
+
+  .header { text-align: center; margin-bottom: 40px; animation: fadeUp 0.6s ease both; }
+
+  .badge {
+    display: inline-block;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Nunito', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+
+  h1 { font-family: 'Nunito', sans-serif; font-size: clamp(28px, 5vw, 42px); font-weight: 900; line-height: 1.1; letter-spacing: -0.5px; color: var(--text); }
+  h1 span { color: var(--accent); }
+  .subtitle { color: var(--muted); font-size: 12px; margin-top: 10px; letter-spacing: 1px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 36px; animation: fadeUp 0.6s ease both; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  .entry-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: block; }
+
+  .entry-input {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px 20px; color: var(--text); font-family: 'Nunito Sans', sans-serif; font-size: 16px;
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s; margin-bottom: 24px;
+  }
+  .entry-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  .entry-input::placeholder { color: var(--muted); }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+  .info-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; }
+  .info-box .val { font-family: 'Nunito', sans-serif; font-size: 22px; font-weight: 800; color: var(--accent); }
+  .info-box .lbl { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+
+  .btn {
+    width: 100%; background: var(--accent); color: #ffffff; border: none; border-radius: 8px;
+    padding: 16px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800;
+    letter-spacing: 1px; text-transform: uppercase; cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--accent-glow); }
+  .btn:active { transform: translateY(0); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .btn-ghost:hover { background: var(--accent-dim); box-shadow: none; }
+
+  .progress-wrap { margin-bottom: 28px; }
+  .progress-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .q-counter { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+  .q-counter span { color: var(--accent); font-weight: 600; }
+  .progress-bar { height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.4s ease; box-shadow: 0 0 8px var(--accent-glow); }
+
+  .section-tag { display: inline-block; font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); border: 1px solid var(--border); padding: 4px 10px; border-radius: 2px; margin-bottom: 14px; }
+  .question-text { font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 700; line-height: 1.45; margin-bottom: 24px; color: var(--text); }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option { display: flex; align-items: flex-start; gap: 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.15s; user-select: none; }
+  .option:hover:not(.locked) { border-color: var(--accent); background: var(--accent-dim); transform: translateX(4px); }
+  .option.selected { border-color: var(--accent); background: var(--accent-dim); }
+  .option.correct { border-color: var(--success); background: var(--success-dim); }
+  .option.wrong { border-color: var(--danger); background: var(--danger-dim); }
+  .option.locked { cursor: default; pointer-events: none; }
+
+  .opt-letter { min-width: 26px; height: 26px; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--muted); transition: all 0.2s; flex-shrink: 0; }
+  .option.selected .opt-letter { border-color: var(--accent); color: var(--accent); }
+  .option.correct .opt-letter { border-color: var(--success); color: var(--success); background: var(--success-dim); }
+  .option.wrong .opt-letter { border-color: var(--danger); color: var(--danger); background: var(--danger-dim); }
+  .opt-text { font-size: 13px; line-height: 1.5; padding-top: 3px; }
+
+  .feedback { margin-top: 18px; padding: 14px 18px; border-radius: 8px; font-size: 12px; line-height: 1.6; display: none; animation: fadeUp 0.3s ease both; }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: var(--success-dim); border: 1px solid var(--success); color: var(--success); }
+  .feedback.wrong-fb { background: var(--danger-dim); border: 1px solid var(--danger); color: var(--danger); }
+
+  .nav { margin-top: 24px; }
+
+  .result-score { text-align: center; padding: 32px 0 24px; }
+  .score-ring { position: relative; width: 130px; height: 130px; margin: 0 auto 20px; }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring circle { fill: none; stroke-width: 8; stroke-linecap: round; }
+  .ring-bg { stroke: var(--border); }
+  .ring-fill { transition: stroke-dashoffset 1s ease; }
+  .score-num { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+  .score-num .big { font-family: 'Nunito', sans-serif; font-size: 32px; font-weight: 800; }
+  .score-num .pct { font-size: 10px; color: var(--muted); letter-spacing: 2px; }
+  .result-label { font-family: 'Nunito', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .result-sub { font-size: 12px; color: var(--muted); margin-bottom: 28px; }
+
+  .result-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+  .rb-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+  .rb-box .num { font-family: 'Nunito', sans-serif; font-size: 28px; font-weight: 800; }
+  .rb-box .lbl { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+  .rb-box.pass .num { color: var(--success); }
+  .rb-box.fail .num { color: var(--danger); }
+
+  .sending-msg { text-align: center; font-size: 11px; color: var(--muted); margin-bottom: 16px; letter-spacing: 1px; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="badge">Section 2 — Platform Setup</div>
+    <h1><span>Dolly</span>Girls. Knowledge Quiz</h1>
+    <p class="subtitle">Terminology · Screen Setup · StripChat · MFC · Chaturbate · Pre-Stream</p>
+  </div>
+
+  <!-- ENTRY -->
+  <div class="card screen active" id="screen-entry">
+    <label class="entry-label" for="tg-input">Your Telegram Username</label>
+    <input class="entry-input" id="tg-input" type="text" placeholder="@yourusername" autocomplete="off"/>
+    <div class="info-grid">
+      <div class="info-box"><div class="val" id="q-total-display">15</div><div class="lbl">Questions</div></div>
+      <div class="info-box"><div class="val">80%</div><div class="lbl">Pass Mark</div></div>
+    </div>
+    <button class="btn" onclick="startQuiz()">Begin Assessment</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="card screen" id="screen-quiz">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span class="q-counter">Question <span id="q-num">1</span> of <span id="q-total">15</span></span>
+        <span class="q-counter" id="q-section-label"></span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+    <div class="section-tag" id="section-tag"></div>
+    <div class="question-text" id="question-text"></div>
+    <div class="options" id="options-list"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="nav"><button class="btn" id="next-btn" style="display:none" onclick="nextQuestion()">Next Question →</button></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="card screen" id="screen-results">
+    <div class="result-score">
+      <div class="score-ring">
+        <svg viewBox="0 0 120 120" width="130" height="130">
+          <circle class="ring-bg" cx="60" cy="60" r="52"/>
+          <circle class="ring-fill" id="ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+        </svg>
+        <div class="score-num">
+          <div class="big" id="score-pct">0%</div>
+          <div class="pct">SCORE</div>
+        </div>
+      </div>
+      <div class="result-label" id="result-label"></div>
+      <div class="result-sub" id="result-sub"></div>
+    </div>
+    <div class="result-breakdown">
+      <div class="rb-box pass"><div class="num" id="r-correct">0</div><div class="lbl">Correct</div></div>
+      <div class="rb-box fail"><div class="num" id="r-wrong">0</div><div class="lbl">Incorrect</div></div>
+    </div>
+    <div class="sending-msg" id="sending-msg">Saving your result...</div>
+    <button class="btn btn-ghost" onclick="retryQuiz()">Retake Quiz</button>
+  </div>
+
+</div>
+<script>
+const WEBHOOK_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+const SECTION_NAME = "Section 2 – Platform Setup & Navigation";
+
+const questions = [
+
+  // — TERMINOLOGY (3)
+  {
+    section: "Terminology",
+    q: "A user says they need to 'top up' before going private. What does this mean?",
+    opts: [
+      "They want to upgrade to a premium account",
+      "They are about to add more tokens to their account and spend",
+      "They are asking for a discount on the private price",
+      "They want to spy on another user's private show"
+    ],
+    ans: 1,
+    fb: "Topping up means a user is adding more tokens to their account. If someone says they need to top up, they are about to spend — treat this as a strong buying signal."
+  },
+  {
+    section: "Terminology",
+    q: "What is a 'warm lead'?",
+    opts: [
+      "A new user who just joined the room",
+      "A user who is currently in a private show",
+      "A user who has already spent, has tokens, or is a high level — worth prioritising",
+      "A user who has subscribed to the fan club"
+    ],
+    ans: 2,
+    fb: "A warm lead is a user who has already spent, has tokens in their balance, or is at a high level. They are worth prioritising over cold contacts who have never engaged."
+  },
+  {
+    section: "Terminology",
+    q: "A user messages asking for C2C. Before agreeing, what must you always do?",
+    opts: [
+      "Agree immediately — it's free so there's no issue",
+      "Confirm with the model via Telegram first and wait for a tip",
+      "Decline — C2C is never allowed on any platform",
+      "Ask the user to go private first"
+    ],
+    ans: 1,
+    fb: "C2C (Cam to Cam) is not a private show feature on MFC and Chaturbate — users can turn cameras on for free. Always confirm with the model via Telegram before agreeing, and wait for a tip first. Never assume it is available."
+  },
+
+  // — SCREEN SETUP (2)
+  {
+    section: "Screen Setup",
+    q: "How should your screen be split when chatting across multiple platforms?",
+    opts: [
+      "Full screen on one platform at a time, switching between them",
+      "Left top — StripChat, left bottom — MFC, top right — stream, bottom right — Telegram",
+      "Left half — Telegram, right half — whichever platform is busiest",
+      "All platforms open in separate windows on different monitors"
+    ],
+    ans: 1,
+    fb: "Your screen should be split into 4 sections: top left — StripChat broadcast centre, bottom left — MFC broadcast centre, top right — stream open in a separate browser, bottom right — Telegram with the model group chat open."
+  },
+  {
+    section: "Screen Setup",
+    q: "Why must the stream always be open in a separate browser during the live?",
+    opts: [
+      "So you can chat from two different accounts at the same time",
+      "So you can monitor stream quality and act immediately if something looks wrong",
+      "Platform rules require a second browser to be open at all times",
+      "So the model can see you are watching her stream"
+    ],
+    ans: 1,
+    fb: "The stream must be open in a separate browser so you can monitor quality throughout the live. If quality drops or something looks off, you will notice and can act on it immediately."
+  },
+
+  // — STRIPCHAT (3)
+  {
+    section: "StripChat",
+    q: "What are the correct token settings for a standard private show on StripChat?",
+    opts: [
+      "90 tokens, 2 minute minimum",
+      "60 tokens, 4 minute minimum",
+      "50 tokens, no minimum",
+      "120 tokens, 5 minute minimum"
+    ],
+    ans: 1,
+    fb: "A standard private show on StripChat is 60 tokens with a 4 minute minimum. An exclusive private is 90 tokens with a 4 minute minimum. Always verify these settings before every live."
+  },
+  {
+    section: "StripChat",
+    q: "What is the Strip Score and why does it matter?",
+    opts: [
+      "A score given to chatters based on their performance — higher score means a bonus",
+      "StripChat's internal rating for the profile — higher score means better placement on the live page",
+      "A rating users leave after private shows — affects tip menu prices",
+      "A daily earnings target set by management"
+    ],
+    ans: 1,
+    fb: "The Strip Score is StripChat's overall performance rating for the profile. The higher the Strip Score, the higher the profile ranks on the live page — meaning more people will discover and click on the stream."
+  },
+  {
+    section: "StripChat",
+    q: "A user is paying to spy on a private show. They are not yet in DMs. What should you do?",
+    opts: [
+      "Leave them alone — spying users don't want to be contacted",
+      "Wait until the private ends before messaging them",
+      "Use this as an opportunity to message them and close them into their own private",
+      "Refund their spy tokens and invite them to join the public chat"
+    ],
+    ans: 2,
+    fb: "If you can see a user is paying to spy in the Earnings section, and they are not already in DMs, use it as an opportunity — message them and try to close them into their own private show."
+  },
+
+  // — MFC (3)
+  {
+    section: "MyFreeCams",
+    q: "How do you access the model's live stream on MyFreeCams to chat from?",
+    opts: [
+      "Through the Broadcast Centre on the right side of the screen",
+      "By searching the model's name in the public directory",
+      "By finding the model in Online Friends and clicking the screen icon next to her name",
+      "By logging into a separate viewer account"
+    ],
+    ans: 2,
+    fb: "Never use the Broadcast Centre — that is for the model only. Find the model's profile name in the Online Friends list and click the screen icon next to her name. This opens her stream in a separate panel."
+  },
+  {
+    section: "MyFreeCams",
+    q: "How do you monitor tips on MyFreeCams during a live?",
+    opts: [
+      "Tips appear automatically in the public chat feed like on other platforms",
+      "Open Token Sessions under Model Admin in a separate tab and refresh it when you hear a tip sound",
+      "Click the earnings icon in the top right corner of the chat panel",
+      "Tips are sent directly to Telegram by the platform automatically"
+    ],
+    ans: 1,
+    fb: "MFC does not show tips in the public chat. You must have Token Sessions open under Model Admin in a separate tab. When you hear the tip notification sound, click into the tab and press Enter to refresh to see who tipped and how much."
+  },
+  {
+    section: "MyFreeCams",
+    q: "A user on MFC asks about Microsoft Teams sessions. What is the correct pricing and process?",
+    opts: [
+      "£5 flat per session — payment taken on platform via tokens",
+      "Starting at £8 per minute, negotiating down to £4 — payment to the model's PayPal or bank first, then a manager sets up the call",
+      "£10 per minute — the chatter sets up the Teams call directly",
+      "Teams sessions are not offered — decline all requests"
+    ],
+    ans: 1,
+    fb: "Teams sessions start at £8 per minute and can be negotiated down to £4. Payment must be received by the model's PayPal or bank before anything is set up. Once payment is confirmed, a manager logs into her computer to set up the Teams call — not the chatter."
+  },
+
+  // — CHATURBATE (2)
+  {
+    section: "Chaturbate",
+    q: "On Chaturbate, what do red-named users in the users panel indicate?",
+    opts: [
+      "They have been banned or flagged by the platform",
+      "They are anonymous users with no account",
+      "They are high value, consistent spenders — prioritise these immediately",
+      "They are currently in a private show with another model"
+    ],
+    ans: 2,
+    fb: "Red names on Chaturbate indicate high value, consistent spenders — prioritise these immediately. Dark purple are strong spenders, purple are regular spenders, and grey/no colour are new or anonymous users with lowest priority."
+  },
+  {
+    section: "Chaturbate",
+    q: "A user leaves the live before you can send them a PM. How can you still reach them?",
+    opts: [
+      "You cannot — once they leave the room they cannot be contacted",
+      "Use Direct Messages via the small chat icon in the bottom right corner of the Chaturbate tab",
+      "Send them a message through MFC Mail instead",
+      "Flag their username to the manager who will contact them"
+    ],
+    ans: 1,
+    fb: "If a user leaves before you can PM them, use Direct Messages — the small chat icon in the bottom right corner of the tab. Always stay on the live tab and manage this from the chat icon, not by navigating to the full DM inbox page."
+  },
+
+  // — PRE-STREAM (2)
+  {
+    section: "Pre-Stream",
+    q: "What is the very first thing you must do before starting any shift?",
+    opts: [
+      "Log into the platform and start messaging users immediately",
+      "Check Discord for updates, announcements, or messages from management",
+      "Set up the goals and room topic for the stream",
+      "Send the model a Telegram message to confirm she is ready"
+    ],
+    ans: 1,
+    fb: "Before anything else, open Discord and check for updates. Instructions change, platform settings change, model preferences change. Missing an update at the start of a shift and working from outdated information is not acceptable."
+  },
+  {
+    section: "Pre-Stream",
+    q: "The model is late going live. What should you do?",
+    opts: [
+      "Log off and wait to be told when to come back",
+      "Send multiple messages chasing her to find out when she's going live",
+      "Send one message, stay logged in, and continue working through messages and warm leads",
+      "Contact management immediately to report her as a no-show"
+    ],
+    ans: 2,
+    fb: "If the model is late, do not send multiple messages chasing her. Send one message, continue working through pre-stream tasks and warm leads, and wait. If she is significantly late, refer to the shift rules on how late counts as a no-show."
+  }
+
+];
+
+const TOTAL = questions.length;
+
+// ── STATE
+let telegramName = "";
+let currentQ = 0;
+let score = 0;
+let answered = false;
+let shuffled = [];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz() {
+  const raw = document.getElementById('tg-input').value.trim();
+  if (!raw) { document.getElementById('tg-input').focus(); return; }
+  telegramName = raw.startsWith('@') ? raw : '@' + raw;
+  shuffled = shuffle(questions);
+  currentQ = 0; score = 0;
+  document.getElementById('q-total').textContent = TOTAL;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+document.getElementById('tg-input').addEventListener('keydown', e => { if (e.key === 'Enter') startQuiz(); });
+
+function renderQuestion() {
+  answered = false;
+  const q = shuffled[currentQ];
+  const letters = ['A','B','C','D'];
+  document.getElementById('q-num').textContent = currentQ + 1;
+  document.getElementById('section-tag').textContent = q.section;
+  document.getElementById('question-text').textContent = q.q;
+  document.getElementById('progress-fill').style.width = ((currentQ / TOTAL) * 100) + '%';
+  document.getElementById('next-btn').style.display = 'none';
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback'; fb.textContent = '';
+  const list = document.getElementById('options-list');
+  list.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `<div class="opt-letter">${letters[i]}</div><div class="opt-text">${opt}</div>`;
+    div.onclick = () => selectAnswer(i);
+    list.appendChild(div);
+  });
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = shuffled[currentQ];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o => o.classList.add('locked'));
+  options[idx].classList.add('selected');
+  const fb = document.getElementById('feedback');
+  if (idx === q.ans) {
+    score++;
+    options[idx].classList.add('correct');
+    fb.className = 'feedback correct-fb show';
+    fb.textContent = '✓ Correct — ' + q.fb;
+  } else {
+    options[idx].classList.add('wrong');
+    options[q.ans].classList.add('correct');
+    fb.className = 'feedback wrong-fb show';
+    fb.textContent = '✗ Incorrect — ' + q.fb;
+  }
+  document.getElementById('next-btn').style.display = 'block';
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ < TOTAL) { renderQuestion(); } else { showResults(); }
+}
+
+function showResults() {
+  showScreen('screen-results');
+  const pct = Math.round((score / TOTAL) * 100);
+  const passed = pct >= 80;
+  document.getElementById('score-pct').textContent = pct + '%';
+  document.getElementById('score-pct').style.color = passed ? 'var(--success)' : 'var(--danger)';
+  document.getElementById('r-correct').textContent = score;
+  document.getElementById('r-wrong').textContent = TOTAL - score;
+  document.getElementById('result-label').textContent = passed ? '🎉 You Passed!' : '❌ Not Quite';
+  document.getElementById('result-label').style.color = passed ? 'var(--success)' : 'var(--danger)';
+  document.getElementById('result-sub').textContent = passed
+    ? `Great work, ${telegramName}. You're cleared to move forward.`
+    : `${telegramName}, you needed 80% to pass. Review the material and try again.`;
+  const ring = document.getElementById('ring-fill');
+  const circumference = 326.7;
+  ring.style.stroke = passed ? 'var(--success)' : 'var(--danger)';
+  setTimeout(() => { ring.style.strokeDashoffset = circumference - (circumference * pct / 100); }, 100);
+  sendToSheets(telegramName, pct, score, passed);
+}
+
+function retryQuiz() {
+  shuffled = shuffle(questions);
+  currentQ = 0; score = 0;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+async function sendToSheets(telegram, pct, correct, passed) {
+  const msg = document.getElementById('sending-msg');
+  if (!WEBHOOK_URL || WEBHOOK_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
+    msg.textContent = "⚠ No webhook configured — result not saved.";
+    return;
+  }
+  try {
+    const payload = {
+      telegram,
+      section: SECTION_NAME,
+      score: pct,
+      correct,
+      wrong: TOTAL - correct,
+      passed: passed ? "PASS" : "FAIL",
+      timestamp: new Date().toISOString()
+    };
+    await fetch(WEBHOOK_URL, {
+      method: "POST", mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    msg.textContent = "✓ Result saved successfully.";
+  } catch (e) {
+    msg.textContent = "⚠ Could not save result — check webhook URL.";
+  }
+}
+</script>
+</body>
+</html>
